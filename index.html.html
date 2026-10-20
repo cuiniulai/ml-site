@@ -1,0 +1,1093 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>机器学习概述 · 交互式学习 · 北京航空航天大学</title>
+<style>
+:root{
+  --navy:#12315e; --navy2:#1b4388; --blue:#2f6fd0; --sky:#4aa3df;
+  --gold:#e0a03c; --gold2:#f0c674; --red:#d9534f; --green:#3aa675;
+  --bg:#f4f6fa; --card:#ffffff; --ink:#1c2733; --sub:#5a6b7d; --line:#e2e8f0;
+  --sh:0 6px 22px rgba(18,49,94,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+
+/* ---------- layout ---------- */
+#app{display:flex;max-width:1400px;margin:0 auto;gap:0}
+#toc{position:sticky;top:0;height:100vh;width:268px;flex:0 0 268px;background:linear-gradient(170deg,var(--navy),#0d2444);color:#e8eef7;padding:26px 18px;overflow-y:auto}
+#toc h1{font-size:16px;font-weight:700;line-height:1.5;letter-spacing:.5px;margin-bottom:4px;color:#fff}
+#toc .sub{font-size:11.5px;color:#93b0d4;letter-spacing:1px;margin-bottom:22px;text-transform:uppercase}
+#toc nav a{display:block;font-size:13.5px;color:#c3d3e8;padding:8px 12px;border-radius:8px;margin-bottom:3px;transition:.18s;border-left:3px solid transparent}
+#toc nav a:hover{background:rgba(255,255,255,.09);color:#fff}
+#toc nav a.active{background:rgba(79,163,223,.22);color:#fff;border-left-color:var(--gold2)}
+#toc nav .g{font-size:11px;color:#7c9bbf;margin:16px 12px 8px;letter-spacing:1px;text-transform:uppercase}
+main{flex:1;min-width:0;padding:0 0 80px}
+section{padding:52px 48px 40px;border-bottom:1px solid var(--line)}
+.kicker{font-size:12px;letter-spacing:2px;color:var(--blue);font-weight:700;text-transform:uppercase;margin-bottom:8px}
+h2.sec{font-size:29px;font-weight:800;color:var(--navy);letter-spacing:-.4px;margin-bottom:6px}
+.lead{color:var(--sub);font-size:15px;max-width:820px;margin-bottom:26px}
+.card{background:var(--card);border-radius:14px;box-shadow:var(--sh);padding:24px 26px;margin-bottom:20px;border:1px solid #eef2f7}
+h3{font-size:19px;color:var(--navy2);font-weight:750;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+h3 .n{background:var(--navy);color:#fff;font-size:12.5px;font-weight:700;width:26px;height:26px;border-radius:7px;display:inline-flex;align-items:center;justify-content:center;flex:0 0 26px}
+h4{font-size:15px;color:var(--ink);font-weight:700;margin:16px 0 8px}
+p{margin-bottom:10px;font-size:14.6px;color:#33475c}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.mono{font-family:"SF Mono",Consolas,monospace}
+.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:20px;font-weight:600;margin:2px 4px 2px 0}
+.t-blue{background:#e6f0fb;color:var(--navy2)}
+.t-gold{background:#fdf3e2;color:#9a6412}
+.t-green{background:#e4f5ec;color:#1f7a52}
+.t-red{background:#fdeaea;color:#b03a36}
+.t-gray{background:#eef1f5;color:#53637a}
+.kv{font-size:13.5px}
+.kv div{padding:6px 0;border-bottom:1px dashed #eef1f5;display:flex;gap:8px}
+.kv b{color:var(--navy2);min-width:66px;flex:0 0 66px}
+
+/* hero */
+#hero{padding:0;background:linear-gradient(120deg,#12315e,#1b4388 55%,#2f6fd0);color:#fff;position:relative;overflow:hidden}
+#hero .inner{padding:64px 48px 54px;position:relative;z-index:2}
+#hero h1{font-size:40px;font-weight:850;letter-spacing:-1px;line-height:1.2;margin-bottom:14px}
+#hero h1 em{font-style:normal;color:var(--gold2)}
+#hero p{color:#d6e4f5;font-size:16px;max-width:640px}
+#hero .meta{margin-top:26px;display:flex;gap:28px;flex-wrap:wrap}
+#hero .meta div{font-size:12.5px;color:#bcd3ee}
+#hero .meta strong{display:block;color:#fff;font-size:22px;font-weight:800}
+#hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(240,198,116,.22),transparent 70%)}
+#hero::before{content:"";position:absolute;left:38%;bottom:-180px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(79,163,223,.25),transparent 70%)}
+
+/* buttons / controls */
+.btn{background:var(--navy2);color:#fff;border:0;border-radius:9px;padding:9px 18px;font-size:13.5px;font-weight:600;cursor:pointer;transition:.16s;font-family:inherit}
+.btn:hover{background:var(--blue);transform:translateY(-1px)}
+.btn.g{background:var(--gold);color:#3d2a05}
+.btn.g:hover{background:var(--gold2)}
+.btn.r{background:var(--red)}
+.btn.ghost{background:#eef3fa;color:var(--navy2)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.ctrls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0}
+label.f{font-size:13px;color:var(--sub);font-weight:600;display:flex;align-items:center;gap:8px}
+input[type=range]{width:150px;accent-color:var(--blue)}
+input[type=number],select{font-family:inherit;font-size:13px;padding:6px 10px;border:1px solid #ccd6e2;border-radius:7px;color:var(--ink);background:#fff}
+input[type=number]{width:96px}
+
+canvas{display:block;max-width:100%}
+.panel{background:#fbfcfe;border:1px solid #e9eef6;border-radius:11px;padding:16px}
+.note{background:#fdf8ee;border-left:4px solid var(--gold);padding:12px 16px;border-radius:0 9px 9px 0;font-size:13.5px;color:#6b5220;margin:12px 0}
+.note b{color:#4a380f}
+.warn{background:#fdf0ef;border-left:4px solid var(--red)}
+.out{font-family:"SF Mono",Consolas,monospace;background:#0f2545;color:#7ee2c4;padding:14px 16px;border-radius:9px;font-size:13px;white-space:pre-wrap;min-height:42px;margin-top:12px;line-height:1.6}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--sub);margin-top:8px}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+
+/* comparison table */
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+th{background:var(--navy);color:#fff;text-align:left;padding:11px 13px;font-weight:650;font-size:13px}
+td{padding:10px 13px;border-bottom:1px solid #eef1f5;vertical-align:top}
+tr:nth-child(even) td{background:#fafbfd}
+.tbl-wrap{overflow-x:auto;border-radius:11px;box-shadow:var(--sh)}
+
+/* timeline */
+.tl{position:relative;padding-left:30px;margin-top:8px}
+.tl::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:linear-gradient(var(--blue),var(--gold))}
+.tl .it{position:relative;margin-bottom:18px}
+.tl .it::before{content:"";position:absolute;left:-26px;top:5px;width:14px;height:14px;border-radius:50%;background:var(--gold2);border:3px solid var(--navy);box-shadow:0 0 0 3px #fff}
+.tl h5{font-size:14.5px;color:var(--navy2);margin-bottom:2px}
+.tl p{font-size:13.2px;color:var(--sub);margin:0}
+
+/* fit cards */
+.fit{border-radius:12px;padding:18px;border:2px solid #e9eef6;background:#fff}
+.fit.under{border-color:#f0b9b6}.fit.good{border-color:#9fd6bd}.fit.over{border-color:#e8c98e}
+.fit .st{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.fit.under .st{color:var(--red)}.fit.good .st{color:var(--green)}.fit.over .st{color:#a9791c}
+.fit .err{font-size:12.5px;color:var(--sub);margin-top:8px}
+.fit .err b{color:var(--ink)}
+
+/* stat */
+.stat{background:var(--navy);color:#fff;border-radius:12px;padding:18px;text-align:center}
+.stat .v{font-size:26px;font-weight:800;color:var(--gold2)}
+.stat .l{font-size:12px;color:#a9c3e3;margin-top:4px}
+
+/* quiz */
+.q{background:#fff;border:1px solid #e9eef6;border-radius:12px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--sh)}
+.q h5{font-size:15px;margin-bottom:12px;font-weight:700}
+.q .opts{display:flex;flex-direction:column;gap:8px}
+.q .opt{border:1px solid #dde4ee;border-radius:9px;padding:9px 13px;font-size:13.5px;cursor:pointer;transition:.15s;background:#fff}
+.q .opt:hover{border-color:var(--blue);background:#f4f9ff}
+.q .opt.sel{background:#e6f0fb;border-color:var(--blue)}
+.q .opt.right{background:#e4f5ec;border-color:var(--green)}
+.q .opt.wrong{background:#fdeaea;border-color:var(--red)}
+.q .exp{font-size:12.8px;color:var(--sub);margin-top:10px;background:#f7f9fc;padding:10px 12px;border-radius:8px;display:none}
+.q.done .exp{display:block}
+#score{position:sticky;bottom:20px;margin:0 auto;width:max-content;background:var(--navy);color:#fff;padding:12px 24px;border-radius:40px;box-shadow:0 10px 30px rgba(18,49,94,.3);font-size:14px;font-weight:600}
+footer{text-align:center;padding:30px;font-size:12.5px;color:#8a97a8}
+
+@media(max-width:900px){
+  #toc{display:none}
+  .grid2,.grid3,.grid4{grid-template-columns:1fr}
+  section{padding:34px 20px}
+  #hero .inner{padding:44px 22px}
+  #hero h1{font-size:28px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="toc">
+    <h1>机器学习概述</h1>
+    <div class="sub">Machine Learning · 交互式课程</div>
+    <nav id="nav">
+      <a href="#hero">课程导览</a>
+      <div class="g">一 · 基本概念</div>
+      <a href="#s-what">什么是学习 / 机器学习</a>
+      <a href="#s-history">发展历史</a>
+      <a href="#s-model">模型四要素</a>
+      <a href="#s-train">训练与测试</a>
+      <a href="#s-fit">拟合与泛化</a>
+      <div class="g">二 · 监督与非监督</div>
+      <a href="#s-compare">两种学习对比</a>
+      <a href="#s-linear">线性回归</a>
+      <a href="#s-logistic">逻辑回归</a>
+      <a href="#s-cluster">聚类与 K 均值</a>
+      <div class="g">三 · 评价与选择</div>
+      <a href="#s-eval">误差与评估</a>
+      <a href="#s-metric">性能度量</a>
+      <a href="#s-select">模型选择</a>
+      <div class="g">自测</div>
+      <a href="#s-quiz">知识测验</a>
+    </nav>
+  </aside>
+
+  <main>
+  <!-- ============ HERO ============ -->
+  <section id="hero">
+    <div class="inner">
+      <h1>机器学习概述 <em>· 交互式课程</em></h1>
+      <p>从"什么是学习"出发，理解监督与非监督学习、线性回归与逻辑回归、K 均值聚类，以及模型评价与选择的核心思想。本课程页面内置可拖动、可实时计算的交互演示，边看边试。</p>
+      <div class="meta">
+        <div><strong>3</strong>大知识板块</div>
+        <div><strong>6</strong>个交互演示</div>
+        <div><strong>11</strong>道自测题</div>
+        <div><strong>1959</strong>至今的发展脉络</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 什么是学习 ============ -->
+  <section id="s-what">
+    <div class="kicker">Part 01 · 基本概念</div>
+    <h2 class="sec">什么是学习？什么是机器学习？</h2>
+    <p class="lead">学习不是信息的被动吸收，而是对信息的加工与理解，并根据环境变化做出调整和决策——它是一个主动、由经验带来持久改变的过程。</p>
+    <div class="grid3">
+      <div class="card"><h4>📖 经验</h4><p style="font-size:13.5px">从课程讲解与教材中汲取他人经验，学习从基础语法入手。</p></div>
+      <div class="card"><h4>✍️ 练习</h4><p style="images 13px">通过动手实践完成不同难度的任务，逐步提升能力与技巧。</p></div>
+      <div class="card"><h4>🔁 反思</h4><p style="font-size:13.5px">回顾练习中犯的错误，总结提升，避免下次再犯。</p></div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h3><span class="n">定</span>三个定义</h3>
+      <div class="grid3">
+        <div>
+          <div class="tag t-gray">Samuel · 1959</div>
+          <p style="font-size:13.5px;margin-top:8px">机器学习是"不显式编程地赋予计算机能力"的研究领域。<br><span class="mono" style="color:var(--sub);font-size:12.5px">Field of study that gives computers the ability to learn without being explicitly programmed.</span></p>
+        </div>
+        <div>
+          <div class="tag t-gray">Mitchell · 1998</div>
+          <p style="font-size:13.5px;margin-top:8px">适定性学习问题：对于任务 <span class="mono">T</span>、性能度量 <span class="mono">P</span> 和经验 <span class="mono">E</span>，若程序通过经验 <span class="mono">E</span> 提升了在 <span class="mono">T</span> 上由 <span class="mono">P</span> 衡量的性能，就说它学会了 <span class="mono">T</span>。</p>
+        </div>
+        <div>
+          <div class="tag t-gray">本课程</div>
+          <p style="font-size:13.5px;margin-top:8px">机器学习研究计算机如何模拟或实现人类的学习行为——核心问题是如何让计算机通过处理数据和反馈来"学习"并改进，而无需人为编写详细的程序规则。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 发展历史 ============ -->
+  <section id="s-history">
+    <h2 class="sec">机器学习发展历史</h2>
+    <p class="lead">从人工神经元到多模态大模型，拖动下方时间轴可聚焦不同时期的里程碑。</p>
+    <div class="card">
+      <input type="range" id="tlRange" min="0" max="12" value="0" style="width:100%">
+      <div class="ctrls"><span class="tag t-gray" id="tlYear">1943</span><strong id="tlTitle" style="font-size:15px">人工神经元模型</strong></div>
+      <p id="tlDesc" style="font-size:14px">W.S. McCulloch 与 Walter Pitts 提出人工神经元模型，奠定神经网络发展基础。</p>
+      <div class="legend"><span><i style="background:var(--navy)"></i>奠基</span><span><i style="background:var(--blue)"></i>复兴</span><span><i style="background:var(--gold)"></i>突破</span><span><i style="background:var(--green)"></i>新范式</span></div>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">完整时间线</h4>
+      <div class="tl" id="timeline"></div>
+    </div>
+  </section>
+
+  <!-- ============ 模型四要素 ============ -->
+  <section id="s-model">
+    <h2 class="sec">机器学习模型的四个要素</h2>
+    <p class="lead">以"飞机燃油消耗预测"为例：给出起飞重量、飞行距离、高度等特征，模型输出燃油消耗量。下面四个模块共同构成任何机器学习算法的基本逻辑。</p>
+    <div class="grid4">
+      <div class="card"><div class="tag t-blue">数据</div><h4 style="margin:8px 0">起飞重量、飞行距离、高度、燃油消耗量</h4><p style="font-size:12.8px">样本的属性与标签，是模型学习的原材料。</p></div>
+      <div class="card"><div class="tag t-blue">模型</div><h4 style="margin:8px 0;font-family:monospace;font-size:14px">y = f(重量, 距离, 高度)</h4><p style="font-size:12.8px">对未知映射关系的假设形式。</p></div>
+      <div class="card"><div class="tag t-blue">目标函数</div><h4 style="margin:8px 0;font-size:13px">计算输出与真实结果的误差</h4><p style="font-size:12.8px">衡量"好坏"的标准，通常要最小化它。</p></div>
+      <div class="card"><div class="tag t-blue">优化算法</div><h4 style="margin:8px 0">调整参数以最小化目标函数</h4><p style="font-size:12.8px">梯度下降就是最常用的优化方法。</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 训练与测试 ============ -->
+  <section id="s-train">
+    <h2 class="sec">训练与测试</h2>
+    <p class="lead">模型训练是核心步骤：模型不断调整参数以适应训练集。测试则用于检验学习结果。点击按钮观察一个分类模型如何在训练集中划分两类样本。</p>
+    <div class="card">
+      <div class="grid2">
+        <div>
+          <h4 style="margin-top:0">两阶段流程</h4>
+          <div class="kv">
+            <div><b>① 数据准备</b><span>特征 + 标签，构成训练样本</span></div>
+            <div><b>② 模型训练</b><span>超参数调优，调整参数</span></div>
+            <div><b>③ 模型测试</b><span>用未观测的测试数据验证</span></div>
+            <div><b>④ 部署</b><span>输出预测结果</span></div>
+          </div>
+          <div class="note"><b>关键前提：</b>训练集与测试集来自<b>相同分布</b>；需考虑问题特性并开发专门算法，使模型更有效。</div>
+        </div>
+        <div>
+          <canvas id="cv" width="500" height="360"></canvas>
+          <div class="ctrls">
+            <button class="btn" id="cvTrain">▶ 训练模型</button>
+            <button class="btn ghost" id="cvReset">重置</button>
+          </div>
+          <div class="legend"><span><i style="background:var(--blue)"></i>类别 A 训练点</span><span><i style="background:var(--gold)"></i>类别 B 训练点</span><span><i style="background:rgba(46,111,208,.25);border:1px solid var(--blue)"></i>决策边界</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 拟合与泛化 ============ -->
+  <section id="s-fit">
+    <h2 class="sec">拟合与泛化</h2>
+    <p class="lead">模型目标是学习到数据的内在逻辑，而非记住噪声。<b>拖动多项式阶数滑块</b>，观察同一份带噪声数据上不同复杂度的模型表现差异。</p>
+    <div class="card">
+      <div class="ctrls">
+        <label class="f">模型复杂度（多项式阶数）
+          <input type="range" id="deg" min="1" max="16" value="2"><span class="tag t-blue" id="degVal">1 次</span>
+        </label>
+        <label class="f">数据噪声
+          <input type="range" id="noise" min="0" max="100" value="90"><span class="tag t-gray" id="noiseVal">0.90</span>
+        </label>
+        <button class="btn ghost" id="newData">🎲 换一批数据</button>
+      </div>
+      <div class="grid2">
+        <div>
+          <canvas id="fitTrain" width="500" height="300"></canvas>
+          <div style="text-align:center;font-size:12.5px;color:var(--sub)">训练集（模型"看过"的数据）</div>
+        </div>
+        <div>
+          <canvas id="fitTest" width="500" height="300"></canvas>
+          <div style="text-align:center;font-size:12.5px;color:var(--sub)">测试集（未见过的数据）</div>
+        </div>
+      </div>
+      <div class="grid3" style="margin-top:16px">
+        <div class="stat"><div class="v" id="oTrain">—</div><div class="l">训练集 MSE</div></div>
+        <div class="stat"><div class="v" id="oTest">—</div><div class="l">测试集 MSE</div></div>
+        <div class="stat"><div class="v" id="oGap">—</div><div class="l">泛化差距</div></div>
+      </div>
+      <div class="grid3" style="margin-top:16px">
+        <div class="fit under"><div class="st">⚠ 欠拟合</div><p style="font-size:13px">模型太"简单"，无法表示所有相关类别特征。</p><div class="err"><b>高训练误差</b>，<b>高测试误差</b></div></div>
+        <div class="fit good"><div class="st">✓ 性能良好</div><p style="font-size:13px">学习到数据内在逻辑，不受噪声影响。</p><div class="err"><b>低训练误差</b>，<b>低测试误差</b></div></div>
+        <div class="fit over"><div class="st">⚠ 过拟合</div><p style="font-size:13px">模型太"复杂"，拟合到无关特征（噪声），错过重点。</p><div class="err"><b>低训练误差</b>，<b>高测试误差</b></div></div>
+      </div>
+      <div class="note"><b>VC 维：</b>统计学习理论中衡量模型复杂度的概念——VC 维越大，模型复杂度越高，拟合能力越强，但也越容易过拟合。</div>
+    </div>
+  </section>
+
+  <!-- ============ 两种学习对比 ============ -->
+  <section id="s-compare">
+    <h2 class="sec">监督学习 vs 非监督学习</h2>
+    <p class="lead">二者的根本差别在于训练数据<b>有没有标签</b>。下表可横向对比所有关键维度。</p>
+    <div class="tbl-wrap card">
+      <table>
+        <tr><th style="width:130px">学习方式</th><th>监督学习</th><th>非监督学习</th></tr>
+        <tr><td><b>数据类型</b></td><td>有标签数据</td><td>无标签数据</td></tr>
+        <tr><td><b>学习目标</b></td><td>学习从输入到输出的映射关系</td><td>发现数据中的潜在结构或模式</td></tr>
+        <tr><td><b>任务类型</b></td><td>分类、回归等</td><td>聚类、降维等</td></tr>
+        <tr><td><b>输出</b></td><td>预测结果或类别标签等</td><td>数据的聚类结果、低维表示等</td></tr>
+        <tr><td><b>常见算法</b></td><td>线性回归、逻辑回归、支持向量机、决策树等</td><td>K 均值聚类、K 近邻、主成分分析、自编码器等</td></tr>
+        <tr><td><b>应用场景</b></td><td>图像分类、语音识别、医疗诊断等</td><td>用户群体划分、异常检测、数据降维等</td></tr>
+      </table>
+    </div>
+    <div class="grid2" style="margin-top:18px">
+      <div class="card" style="border-top:4px solid var(--blue)">
+        <h4 style="margin-top:0">🔵 监督学习</h4>
+        <p style="font-size:13.5px">最典型的机器学习方法。每个训练样本都包含输入特征和对应的输出标签，模型从标记数据中学习，用于预测未见过的数据标签。</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--gold)">
+        <h4 style="margin-top:0">🟡 非监督学习</h4>
+        <p style="font-size:13.5px">训练样本只包含输入特征、没有输出标签。模型从无标记数据中发现模式或结构，虽通常准确性不如监督学习，但更灵活、能处理无标签数据，辅助分析与决策。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 线性回归 ============ -->
+  <section id="s-linear">
+    <h2 class="sec">监督学习：线性回归</h2>
+    <p class="lead">"回归"一词源于 Francis Galton 对父母与子女身高的研究：身高偏离平均值的父母，其子女身高倾向于"回归"到平均值。这里用它预测<b>飞机燃油消耗</b>。</p>
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="n">1</span>模型与损失</h3>
+        <p style="font-size:13.5px">假设函数为输入的线性函数：</p>
+        <p class="mono" style="background:#f4f7fb;padding:10px 14px;border-radius:8px;text-align:center;font-size:15px">y = w₀ + w₁x₁ + ··· + w<sub>d</sub>x<sub>d</sub></p>
+        <p style="font-size:13.5px"><span class="mono">xᵢ</span> 是自变量（样本特征），<span class="mono">y</span> 是因变量（待预测目标），<span class="mono">wᵢ</span> 是模型要学习的回归系数。</p>
+        <p style="font-size:13.5px">目标是最小化<b>均方误差 MSE</b>：</p>
+        <p class="mono" style="background:#f4f7fb;padding:10px 14px;border-radius:8px;text-align:center;font-size:14px">L = (1/N) Σ ( f(x⁽ⁱ⁾) − y⁽ⁱ⁾ )²</p>
+        <div class="note"><b>求解思路：</b>计算损失函数对各参数的偏导数，沿<b>负梯度方向</b>更新参数，并引入学习率 <span class="mono">α</span> 控制每次调整的幅度。</div>
+      </div>
+      <div class="card">
+        <h3><span class="n">2</span>案例数据</h3>
+        <div class="tbl-wrap">
+          <table style="font-size:12.8px">
+            <tr><th>飞行编号</th><th>飞行距离(×10³ km)</th><th>飞机重量(×10² t)</th><th>燃油消耗(×10³ L)</th></tr>
+            <tr><td>1</td><td>1.5</td><td>2.0</td><td>5.0</td></tr>
+            <tr><td>2</td><td>2.0</td><td>2.5</td><td>6.0</td></tr>
+            <tr><td>3</td><td>1.0</td><td>1.5</td><td>4.0</td></tr>
+            <tr><td>4</td><td>1.8</td><td>2.1</td><td>5.5</td></tr>
+          </table>
+        </div>
+        <p style="font-size:13px;margin-top:10px">用批量梯度下降（初始值全 0，α = 0.01，迭代 10000 次）求得最优系数。</p>
+        <p class="mono" style="background:#eef7f2;padding:10px 14px;border-radius:8px;text-align:center;font-size:15px;color:#1f7a52;font-weight:700">y = 1.60 + 1.26 x₁ + 0.76 x₂</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3><span class="n">3</span>交互：用线性回归做预测</h3>
+      <div class="ctrls">
+        <label class="f">飞行距离 <input type="number" id="d1" value="1.6" step="0.1"> ×10³ km</label>
+        <label class="f">飞机重量 <input type="number" id="d2" value="1.8" step="0.1"> ×10² t</label>
+        <button class="btn" id="linCalc">计算预测值</button>
+        <button class="btn ghost" id="linShow">显示拟合超平面</button>
+      </div>
+      <canvas id="linChart" width="980" height="360"></canvas>
+      <div class="out" id="linOut">调整参数后点击"计算预测值"。示例：距离 1.6、重量 1.8 → y = 1.60 + 1.26×1.6 + 0.76×1.8 = 4.98（×10³ 升），即约 4980 升。</div>
+    </div>
+  </section>
+
+  <!-- ============ 逻辑回归 ============ -->
+  <section id="s-logistic">
+    <h2 class="sec">监督学习：逻辑回归（二分类）</h2>
+    <p class="lead">把"燃油消耗是否超标"当作分类问题。逻辑回归 = 线性回归 + Sigmoid 函数，将线性输出映射为 (0,1) 之间的概率值。</p>
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="n">1</span>Sigmoid 与对数几率</h3>
+        <p class="mono" style="background:#f4f7fb;padding:10px 14px;border-radius:8px;text-align:center;font-size:14px">P = 1 / (1 + e<sup>−(w₀ + w₁x₁ + ··· + w<sub>d</sub>x<sub>d</sub>)</sup>)</p>
+        <p style="font-size:13.5px">若概率 &gt; 0.5 判为发生（超标），否则判为未发生。损失函数采用<b>二值交叉熵</b>：</p>
+        <p class="mono" style="background:#f4f7fb;padding:10px 14px;border-radius:8px;text-align:center;font-size:13px">L = −(1/N) Σ [ y⁽ⁱ⁾log(p⁽ⁱ⁾) + (1−y⁽ⁱ⁾)log(1−p⁽ⁱ⁾) ]</p>
+      </div>
+      <div class="card">
+        <h3><span class="n">2</span>训练结果</h3>
+        <div class="tbl-wrap">
+          <table style="font-size:12.8px">
+            <tr><th>编号</th><th>距离</th><th>重量</th><th>是否超标</th></tr>
+            <tr><td>1</td><td>1.5</td><td>2.0</td><td>0</td></tr>
+            <tr><td>2</td><td>2.0</td><td>2.5</td><td>1</td></tr>
+            <tr><td>3</td><td>1.0</td><td>1.5</td><td>0</td></tr>
+            <tr><td>4</td><td>1.8</td><td>2.1</td><td>1</td></tr>
+          </table>
+        </div>
+        <p class="mono" style="background:#fdf3e2;padding:10px 14px;border-radius:8px;text-align:center;font-size:13.5px;margin-top:10px">P(超标) = σ(−13.88 + 13.05 x₁ − 3.62 x₂)</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="n">3</span>交互：Sigmoid 与分类预测</h3>
+      <div class="grid2">
+        <div>
+          <div class="ctrls">
+            <label class="f">权重 w <input type="range" id="sigW" min="-60" max="60" value="13"> <span class="tag t-blue" id="sigWv">13</span></label>
+            <label class="f">阈值 <input type="range" id="sigT" min="0" max="100" value="50"> <span class="tag t-gray" id="sigTv">0.50</span></label>
+          </div>
+          <canvas id="sigChart" width="470" height="300"></canvas>
+          <div class="legend"><span><i style="background:var(--blue)"></i>S 型曲线</span><span><i style="background:var(--gold)"></i>决策阈值</span><span><i style="background:rgba(46,111,208,.18)"></i>正类区域</span></div>
+        </div>
+        <div>
+          <div class="ctrls">
+            <label class="f">飞行距离 <input type="number" id="lg1" value="1.6" step="0.1"></label>
+            <label class="f">飞机重量 <input type="number" id="lg2" value="1.8" step="0.1"></label>
+            <button class="btn" id="logCalc">计算概率</button>
+          </div>
+          <canvas id="logChart" width="470" height="300"></canvas>
+          <div class="out" id="logOut">调整参数后点击"计算概率"。示例：距离 1.6、重量 1.8 → P(超标) ≈ 0.62 &gt; 0.5，判为超标。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ K均值 ============ -->
+  <section id="s-cluster">
+    <h2 class="sec">非监督学习：聚类与 K 均值</h2>
+    <p class="lead">聚类按某个标准（如距离）将无标注样本划分为若干不相交的子集（簇），希望<b>簇内相似度高、簇间差异度大</b>。K 均值可用"露天电影院—村民"的故事来理解：村民就近观影，放映员搬向村民中心，反复迭代直至稳定。</p>
+    <div class="card">
+      <div class="ctrls">
+        <label class="f">簇数 K <input type="range" id="kN" min="2" max="6" value="3"> <span class="tag t-blue" id="kNv">3</span></label>
+        <label class="f">样本数 <input type="range" id="kP" min="30" max="180" value="90" step="10"> <span class="tag t-gray" id="kPv">90</span></label>
+        <button class="btn" id="kStep">单步迭代 ▸</button>
+        <button class="btn g" id="kAuto">▶ 自动运行</button>
+        <button class="btn r" id="kReset">重置</button>
+      </div>
+      <canvas id="kChart" width="980" height="420"></canvas>
+      <div class="legend" id="kLeg"></div>
+      <div class="grid4" style="margin-top:14px">
+        <div class="stat"><div class="v" id="kIter">0</div><div class="l">迭代次数</div></div>
+        <div class="stat"><div class="v" id="kJ">—</div><div class="l">准则函数 J</div></div>
+        <div class="stat"><div class="v" id="kMove">—</div><div class="l">中心最大位移</div></div>
+        <div class="stat"><div class="v" id="kSwapped">—</div><div class="l">本轮重分配点数</div></div>
+      </div>
+      <div class="note"><b>两步走策略：</b>① 初始化 K 个中心，按最近距离把每个样本划归对应簇；② 给定归属后，重新计算各类中心（使准则函数最小）。反复迭代直到中心不再显著变化或达到最大次数。</div>
+    </div>
+    <div class="card">
+      <h4 style="margin-top:0">应用：遥感图像分割</h4>
+      <p style="font-size:13.5px">将每个像素视为一个无标注样本（3 维颜色向量），做 K 均值聚类即可实现图像分割；簇中心增多时分割更精细。也可把像素替换为神经网络提取的语义特征，再进行聚类。</p>
+      <canvas id="segCanvas" width="980" height="200"></canvas>
+      <div class="ctrls"><label class="f">聚类数 K <input type="range" id="segK" min="2" max="8" value="4"> <span class="tag t-blue" id="segKv">4</span></label><span class="tag t-gray">彩色斑块 → K 均值聚类结果</span></div>
+    </div>
+  </section>
+
+  <!-- ============ 误差与评估 ============ -->
+  <section id="s-eval">
+    <h2 class="sec">经验误差与泛化误差</h2>
+    <p class="lead">训练误差反映模型在训练数据上的性能；泛化误差衡量模型对未知新样本的预测性能。把训练样本的"次要特点"当作所有样本的"普遍规律"，就会导致过拟合、泛化性能下降。</p>
+    <div class="grid2">
+      <div class="card" style="border-top:4px solid var(--blue)">
+        <h4 style="margin-top:0">📊 训练 / 经验误差</h4>
+        <p style="font-size:13.5px">模型在训练集上的误差，反映模型在训练数据上的性能好坏。</p>
+        <div class="note">很多时候可以学到一个经验误差很小的模型，但它未必泛化得好。</div>
+      </div>
+      <div class="card" style="border-top:4px solid var(--gold)">
+        <h4 style="margin-top:0">🌐 测试 / 泛化误差</h4>
+        <p style="font-size:13.5px">模型在测试集或新样本上的误差，是衡量训练好坏的最终标准。</p>
+        <div class="note warn">过拟合是机器学习面临的主要问题：经验误差无法反映模型的真实性能。</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3><span class="n">例</span>房屋面积预测房价</h3>
+      <p style="font-size:13.5px">8 个样本按面积预测房价，划分为 5 个训练样本与 3 个测试样本，得到模型 <span class="mono">y = 3x</span>。在图上拖动蓝点可改变测试样本，观察训练/测试误差如何随样本位置变化。</p>
+      <div class="grid2">
+        <div>
+          <canvas id="houseTrain" width="470" height="320"></canvas>
+          <div style="text-align:center;font-size:12.5px;color:var(--sub)">训练集拟合（5 个点固定）</div>
+        </div>
+        <div>
+          <canvas id="houseTest" width="470" height="320"></canvas>
+          <div style="text-align:center;font-size:12.5px;color:var(--sub)">测试集误差（拖动红点）</div>
+        </div>
+      </div>
+      <div class="grid3" style="margin-top:14px">
+        <div class="stat"><div class="v" id="hTrain">—</div><div class="l">训练误差 MSE</div></div>
+        <div class="stat"><div class="v" id="hTest">—</div><div class="l">测试误差 MSE</div></div>
+        <div class="stat"><div class="v" id="hSlope">3.00</div><div class="l">当前模型斜率</div></div>
+      </div>
+    </div>
+    <div class="grid3">
+      <div class="card"><div class="tag t-blue">留出法</div><p style="font-size:13.3px">按比例直接划分训练集与测试集。</p></div>
+      <div class="card"><div class="tag t-blue">交叉验证法</div><p style="font-size:13.3px">多次划分并轮换验证，结果更稳定。</p></div>
+      <div class="card"><div class="tag t-gold">训练 / 验证 / 测试</div><p style="font-size:13.3px">训练集训练、验证集调参（超参数）、测试集测泛化性能。在验证集上算误差以避免欠拟合与过拟合。</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 性能度量 ============ -->
+  <section id="s-metric">
+    <h2 class="sec">性能度量</h2>
+    <p class="lead">模型的好坏是相对的。分类任务中常用错误率、准确率、精确率、召回率与 F1。下图把混淆矩阵画成可交互图形，拖动阈值观察四个区域的联动变化。</p>
+    <div class="grid2">
+      <div class="card">
+        <h3><span class="n">表</span>混淆矩阵</h3>
+        <div class="tbl-wrap">
+          <table style="font-size:13px;text-align:center">
+            <tr><th></th><th>预测：正例</th><th>预测：反例</th></tr>
+            <tr><td><b>真实：正例</b></td><td style="background:#e4f5ec">真正例 TP</td><td style="background:#fdeaea">假反例 FN</td></tr>
+            <tr><td><b>真实：反例</b></td><td style="background:#fdeaea">假正例 FP</td><td style="background:#e4f5ec">真反例 TN</td></tr>
+          </table>
+        </div>
+        <div class="kv" style="margin-top:12px">
+          <div><b>准确率</b><span>(TP+TN) / 全部</span></div>
+          <div><b>精确率</b><span>TP / (TP+FP)，"宁缺勿滥"</span></div>
+          <div><b>召回率</b><span>TP / (TP+FN)，"宁可错杀"</span></div>
+          <div><b>F1</b><span>2PR/(P+R)，精确率与召回率的调和平均</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3><span class="n">图</span>阈值滑动演示</h3>
+        <canvas id="prChart" width="470" height="280"></canvas>
+        <div class="ctrls">
+          <label class="f">分类阈值 <input type="range" id="prT" min="0" max="100" value="50"> <span class="tag t-blue" id="prTv">0.50</span></label>
+        </div>
+        <div class="legend"><span><i style="background:var(--green)"></i>TP</span><span><i style="background:var(--red)"></i>FP</span><span><i style="background:var(--gold)"></i>FN</span><span><i style="background:var(--blue)"></i>TN</span></div>
+      </div>
+    </div>
+    <div class="grid4">
+      <div class="stat"><div class="v" id="mP">—</div><div class="l">精确率 P</div></div>
+      <div class="stat"><div class="v" id="mR">—</div><div class="l">召回率 R</div></div>
+      <div class="stat"><div class="v" id="mF1">—</div><div class="l">F1 分数</div></div>
+      <div class="stat"><div class="v" id="mAcc">—</div><div class="l">准确率</div></div>
+    </div>
+    <div class="grid2" style="margin-top:18px">
+      <div class="card"><h4 style="margin-top:0">🔍 查准率高（宁缺勿滥）</h4><p style="font-size:13.3px">只含有明显特征时才判为正例，如垃圾邮件过滤——避免把重要邮件误判为垃圾邮件。代价是可能漏掉一些真正的正例。</p></div>
+      <div class="card"><h4 style="margin-top:0">🔎 查全率高（宁可错杀）</h4><p style="font-size:13.3px">只要指标稍有异常就判为可能患病，如医疗诊断——宁可误诊健康人，也要确保所有真正的病人都被发现。</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 模型选择 ============ -->
+  <section id="s-select">
+    <h2 class="sec">模型选择</h2>
+    <p class="lead">没有普遍都好的算法；算法的有效性在很大程度上取决于特定问题。奥卡姆剃刀原则：<b>"如无必要，勿增实体"</b>——优先选择简单模型，因其更易于理解、泛化能力更好。</p>
+    <div class="grid3">
+      <div class="card"><div class="tag t-green">✓ 拟合能力强</div><h4 style="margin:8px 0">预测结果与真实值偏差低</h4></div>
+      <div class="card"><div class="tag t-green">✓ 泛化能力强</div><h4 style="margin:8px 0">训练集规模变化引起的性能波动小</h4></div>
+      <div class="card"><div class="tag t-green">✓ 鲁棒</div><h4 style="margin:8px 0">对数据噪声不敏感</h4></div>
+    </div>
+    <div class="card">
+      <div class="note" style="margin-top:0"><b>理想的机器学习模型</b>：既要有足够强的拟合能力，又要对数据噪声不敏感、能学到有效的数据内部结构——这正是偏差—方差权衡要解决的问题。</div>
+    </div>
+  </section>
+
+  <!-- ============ 测验 ============ -->
+  <section id="s-quiz">
+    <h2 class="sec">知识测验</h2>
+    <p class="lead">共 11 题，答完可立即看到解析。成绩会随答题实时更新。</p>
+    <div id="quiz"></div>
+    <div id="score">已作答 <span id="doneN">0</span> / 11 · 正确 <span id="rightN">0</span></div>
+  </section>
+
+  <footer>北京航空航天大学 · 人工智能导论 · 机器学习概述 · 交互式课程页面<br>基于课程 PPT 内容整理制作，仅供学习使用。</footer>
+  </main>
+</div>
+
+<script>
+/* ============ 工具函数 ============ */
+const $=s=>document.querySelector(s);
+const $$=s=>document.querySelectorAll(s);
+function retina(c){
+  const dpr=window.devicePixelRatio||1, w=c.width, hh=c.height;
+  c.width=w; c.height=hh;
+  c.style.width=w+'px'; c.style.height=hh+'px';
+  const x=c.getContext('2d'); x.setTransform(1,0,0,1,0,0);
+  return x;
+}
+function rand(a,b){return a+Math.random()*(b-a);}
+function choice(a){return a[Math.floor(Math.random()*a.length)];}
+
+/* ============ 历史时间轴 ============ */
+const TL=[
+ [1943,'navy','人工神经元模型','W.S. McCulloch 与 Walter Pitts 提出人工神经元模型，奠定神经网络发展基础。'],
+ [1956,'navy','达特茅斯会议','John McCarthy、Marvin Minsky 提出"人工智能"这一术语。'],
+ [1959,'navy','机器学习命名','Arthur Samuel 提出"机器学习"：不显式编程地赋予计算机能力。'],
+ [1986,'blue','反向传播算法','Backpropagation 被重新发现并应用于多层神经网络，促进神经网络复兴。'],
+ [1997,'blue','深蓝击败卡斯帕罗夫','IBM 超级计算机"深蓝"在国际象棋比赛中击败世界冠军加里·卡斯帕罗夫。'],
+ [2006,'gold','深度学习概念','Geoffrey Hinton 等人提出"深度学习"，利用多层神经网络进行数据处理。'],
+ [2012,'gold','AlexNet','Hinton 团队提出的 AlexNet 以压倒性优势获得 ImageNet 挑战赛第一名，深度神经网络成为新范式。'],
+ [2014,'gold','生成对抗网络','Ian Goodfellow 等人提出 GAN，能生成高质量的图像、视频和声音。'],
+ [2020,'green','GPT-3','OpenAI 发布 GPT-3，拥有 1750 亿参数，展现惊人的文本生成与理解能力。'],
+ [2023,'green','多模态大模型','AI 进入多模态大模型学习新阶段，GPT-4 等模型相继提出。'],
+ [2025,'green','DeepSeek-R1','2025 年 1 月，中国 AI 公司深度求索发布新一代开源大模型 DeepSeek-R1。'],
+];
+$('#timeline').innerHTML=TL.map((t,i)=>`<div class="it"><h5>${t[0]} · ${t[2]}</h5><p>${t[3]}</p></div>`).join('');
+const tlR=$('#tlRange'); tlR.max=TL.length-1;
+function updTL(){
+  const t=TL[+tlR.value];
+  $('#tlYear').textContent=t[0]; $('#tlTitle').textContent=t[2]; $('#tlDesc').textContent=t[3];
+  $('#tlYear').className='tag '+(t[1]==='navy'?'t-gray':t[1]==='blue'?'t-blue':t[1]==='gold'?'t-gold':'t-green');
+}
+tlR.oninput=updTL; updTL();
+
+/* ============ 训练/测试 决策边界 ============ */
+(function(){
+  const c=$('#cv'), x=retina(c), W=c.width, H=c.height;
+  const pts=[];
+  for(let i=0;i<22;i++){const cx=i<11?150:340, cy=i<11?130:230;
+    pts.push({x:cx+rand(-70,70),y:cy+rand(-70,70),c:i<11?0:1});}
+  let trained=false, wb=null;
+  function draw(show){
+    x.clearRect(0,0,W,H);
+    x.strokeStyle='#eef1f5'; x.lineWidth=1;
+    for(let g=0;g<=W;g+=40){x.beginPath();x.moveTo(g,0);x.lineTo(g,H);x.stroke();}
+    for(let g=0;g<=H;g+=40){x.beginPath();x.moveTo(0,g);x.lineTo(W,g);x.stroke();}
+    if(show&&wb){
+      const [w0,w1,w2]=wb;
+      x.beginPath();
+      for(let py=0;py<=H;py+=2){
+        const px=(-w0-w2*py)/w1;
+        py===0?x.moveTo(px,py):x.lineTo(px,py);
+      }
+      x.strokeStyle='rgba(46,111,208,.55)'; x.lineWidth=12; x.stroke();
+      x.strokeStyle='#2e6fd0'; x.setLineDash([7,5]); x.lineWidth=2; x.stroke(); x.setLineDash([]);
+    }
+    pts.forEach(p=>{
+      x.beginPath(); x.arc(p.x,p.y,6,0,7);
+      x.fillStyle=p.c===0?'#2e6fd0':'#e0a03c'; x.fill();
+      x.strokeStyle='#fff'; x.lineWidth=1.6; x.stroke();
+    });
+  }
+  function train(){
+    let w=[0,0,0],lr=0.05, iters=200, best=0;
+    for(let k=0;k<iters;k++){let g0=0,g1=0,g2=0;
+      pts.forEach(p=>{const z=w[0]+w[1]*p.x+w[2]*p.y; const s=1/(1+Math.exp(-z)); const e=s-p.c;
+        g0+=e; g1+=e*p.x; g2+=e*p.y;});
+      w[0]-=lr*g0/pts.length; w[1]-=lr*g1/pts.length; w[2]-=lr*g2/pts.length;
+    }
+    wb=w; trained=true; draw(true);
+  }
+  $('#cvTrain').onclick=train;
+  $('#cvReset').onclick=()=>{trained=false; draw(false);};
+  draw(false);
+})();
+
+/* ============ 拟合演示 ============ */
+(function(){
+  const N=70;
+  const c1=$('#fitTrain'), c2=$('#fitTest');
+  let data=[],noise=0.9,trainS=[],testS=[],w=[],deg=1,lastNoise=NaN;
+  function gen(){
+    data=[];
+    for(let i=0;i<N;i++){const xx=2*Math.PI*i/(N-1);
+      data.push([xx, Math.sin(xx)*1.4+0.3 +(Math.random()*2-1)*noise]);}
+  }
+  /* 横坐标先缩放到 [-1,1] 再取幂次，避免直接用 x∈[0,2π] 时 x^11 达 5.7e8 而溢出。 */
+  const XMIN=0, XMAX=2*Math.PI, span=XMAX-XMIN;
+  const norm=u=>2*(u-XMIN)/span-1;
+  function basis(u,d){const t=norm(u),r=[1];for(let k=1;k<=d;k++)r.push(Math.pow(t,k));return r;}
+  function split(){const t=[],v=[];data.forEach(d=>((Math.random()<0.6)?t:v).push(d));return [t,v];}
+  /* 正规方程（闭式解）(XᵀX) w = Xᵀy，直接得到全局最优，保证过拟合时训练误差真正趋近 0。 */
+  function fit(train,d){
+    const X=train.map(p=>basis(p[0],d)), y=train.map(p=>p[1]);
+    const K=d+1;
+    const XtX=Array.from({length:K},()=>new Array(K).fill(0));
+    const Xty=new Array(K).fill(0);
+    X.forEach((r,i)=>{r.forEach((v,j)=>{Xty[j]+=v*y[i]; r.forEach((v2,k)=>{XtX[j][k]+=v*v2;});});});
+    const A=XtX.map((row,j)=>row.map((v,k)=>v/X.length), yy=Xty.map(v=>v/X.length));
+    // 加微小对角扰动，保证 d 较大 / 样本少时矩阵可逆
+    for(let j=0;j<K;j++)A[j][j]+=1e-9;
+    return solve(A,yy);
+  }
+  function solve(A,b){              // 高斯消元解 Aw = b
+    const n=A.length; const M=A.map((r,j)=>r.concat(b[j]));
+    for(let i=0;i<n;i++){
+      let mx=i; for(let k=i+1;k<n;k++) if(Math.abs(M[k][i])>Math.abs(M[mx][i])) mx=k;
+      [M[i],M[mx]]=[M[mx],M[i]];
+      const piv=M[i][i]||1e-15;
+      for(let k=i;k<=n;k++)M[i][k]/=piv;
+      for(let k=0;k<n;k++)if(k!==i){const f=M[k][i];for(let j=i;j<=n;j++)M[k][j]-=f*M[i][j];}
+    }
+    return M.map(r=>r[n]);
+  }
+  function pred(ww,xx){const r=basis(xx,ww.length-1); return r.reduce((s,v,j)=>s+v*ww[j],0);}
+  function mse(set,ww){return set.reduce((s,p)=>{const r=basis(p[0],ww.length-1); const z=r.reduce((a,v,j)=>a+v*ww[j],0); return s+(z-p[1])**2;},0)/set.length;}
+  function draw(cv,set,showCurve,title){
+    const x=retina(cv),W=cv.width,H=cv.height;
+    x.clearRect(0,0,W,H);
+    const pad=42, pl=52, pw=W-pl-pad, ph=H-pad-28, ymax=3.2, ymin=-2.2;
+    const sx=v=>pl+pw*(v/(2*Math.PI)), sy=v=>pad+ph*(1-(v-ymin)/(ymax-ymin));
+    x.strokeStyle='#eef1f5'; x.lineWidth=1;
+    for(let g=0;g<=6;g++){const yy=ymin+g*(ymax-ymin)/6; x.beginPath();x.moveTo(pl,sy(yy));x.lineTo(W-pad,sy(yy));x.stroke();}
+    x.strokeStyle='#dde4ee'; x.lineWidth=1; x.strokeRect(pl,pad,pw,ph);
+    x.fillStyle='#8a97a8'; x.font='11px sans-serif'; x.textAlign='right';
+    for(let g=0;g<=6;g++){const yy=ymin+g*(ymax-ymin)/6; x.fillText(yy.toFixed(1),pl-6,sy(yy)+4);}
+    x.textAlign='center';
+    if(deg>6){
+      x.beginPath(); x.strokeStyle='rgba(58,166,117,.35)'; x.lineWidth=2;
+      for(let xx=0;xx<=2*Math.PI;xx+=0.06){const yy=Math.sin(xx)*1.2+Math.cos(xx*0.5)*0.6+0.3; xx===0?x.moveTo(sx(xx),sy(yy)):x.lineTo(sx(xx),sy(yy));}
+      x.stroke();
+    }
+    x.beginPath(); x.strokeStyle=showCurve?'rgba(217,83,79,.75)':'#e0a03c'; x.lineWidth=showCurve?1.6:2.6;
+    for(let xx=0;xx<=2*Math.PI;xx+=0.04){const yy=pred(w,xx); xx===0?x.moveTo(sx(xx),sy(yy)):x.lineTo(sx(xx),sy(yy));}
+    x.stroke();
+    set.forEach(p=>{x.beginPath();x.arc(sx(p[0]),sy(p[1]),3.2,0,7);x.fillStyle='#2e6fd0';x.fill();});
+    x.fillStyle='#33475c'; x.font='bold 12px sans-serif'; x.textAlign='left';
+    x.fillText(title,pl+8,pad+14);
+    if(showCurve){x.fillStyle='#d9534f';x.fillText('⚠ 过拟合：曲线被噪声带弯',pl+8,pad+30);}
+  }
+  function render(){
+    deg=+$('#deg').value; noise=+$('#noise').value/100;
+    $('#degVal').textContent=(deg===1?'线性':deg+' 次'); $('#noiseVal').textContent=noise.toFixed(2);
+    if(data.length===0||lastNoise!==noise){gen(); lastNoise=noise;}
+    [trainS,testS]=split();
+    w=fit(trainS,deg);
+    const et=mse(trainS,w), ev=mse(testS,w);
+    draw(c1,trainS,deg>6,'训练集拟合');
+    draw(c2,testS,deg>6,'测试集泛化');
+    $('#oTrain').textContent=et.toFixed(3);
+    $('#oTest').textContent=ev.toFixed(3);
+    const gap=ev-et;
+    const st=$('#oGap'); st.textContent=gap.toFixed(3);
+    st.style.color=gap>0.6?'#d9534f':gap>0.25?'#e0a03c':'#7ee2c4';
+  }
+  $('#deg').oninput=render; $('#noise').oninput=render;
+  $('#newData').onclick=()=>{lastNoise=NaN;render();};
+  render();
+})();
+
+/* ============ 线性回归 ============ */
+(function(){
+  const W=980,H=360, pad=46, pl=60, pr=20, pt=20, pw=W-pl-pr, ph=H-pt-pad;
+  const pts=[[1.5,2.0,5.0],[2.0,2.5,6.0],[1.0,1.5,4.0],[1.8,2.1,5.5]];
+  const w=[1.60,1.26,0.76];
+  let show=true;
+  function p3(c){const x=retina(c);x.clearRect(0,0,W,H);
+    const xmax=2.6, ymax=3.0, zmin=3, zmax=7;
+    const sx=v=>pl+pw*(v/xmax), sy=v=>pt+ph*(1-(v-ymax)/(ymax));
+    const sz=v=>pt+ph*(1-(v-zmin)/(zmax-zmin));
+    x.strokeStyle='#eef1f5'; x.lineWidth=1;
+    for(let g=0;g<=6;g++){const yy=zmin+g*(zmax-zmin)/6; x.beginPath();x.moveTo(pl,sy(yy));x.lineTo(W-pr,sy(yy));x.stroke();}
+    x.strokeStyle='#dde4ee'; x.lineWidth=1; x.strokeRect(pl,pt,pw,ph);
+    x.fillStyle='#8a97a8'; x.font='11px sans-serif'; x.textAlign='right';
+    for(let g=0;g<=4;g++){const yy=ymax-g*(ymax)/4; x.fillText(yy.toFixed(1),pl-6,sy(yy)+4);}
+    x.textAlign='center';
+    // plane mesh
+    if(show){
+      x.strokeStyle='rgba(46,111,208,.16)'; x.lineWidth=1;
+      for(let i=0;i<=8;i++){
+        const xa=i*xmax/8, xb=(8-i)*xmax/8;
+        x.beginPath();
+        for(let s=0;s<=20;s++){const t=s/20, xx=xa+xb*t, yy=w[0]+w[1]*xx+w[2]*(i*xmax/8), zz=w[0]+w[1]*(xx)+w[2]*(i*xmax/8);}
+      }
+      x.strokeStyle='rgba(79,163,223,.5)';
+      for(let i=0;i<=10;i++){
+        const u=i/10;
+        x.beginPath();
+        for(let s=0;s<=30;s++){const t=s/30, xx=u*xmax, yy=t*xmax, z=w[0]+w[1]*xx+w[2]*yy; s===0?x.moveTo(sx(xx),sz(z)):x.lineTo(sx(xx),sz(z));}
+        x.stroke();
+        x.beginPath();
+        for(let s=0;s<=30;s++){const t=s/30, xx=t*xmax, yy=u*xmax, z=w[0]+w[1]*xx+w[2]*yy; s===0?x.moveTo(sx(xx),sz(z)):x.lineTo(sx(xx),sz(z));}
+        x.stroke();
+      }
+    }
+    pts.forEach(p=>{x.beginPath();x.arc(sx(p[0]),sz(p[2]),6,0,7);x.fillStyle='#d9534f';x.fill();x.strokeStyle='#fff';x.lineWidth=1.5;x.stroke();});
+    x.fillStyle='#33475c'; x.font='bold 12px sans-serif'; x.textAlign='left';
+    x.fillText('飞行距离 x₁ (×10³ km) →',W/2-60,H-8);
+    x.save(); x.translate(14,H/2+40); x.rotate(-Math.PI/2); x.fillText('燃油消耗 y (×10³ L)',0,0); x.restore();
+    return {sx,sy,sz,xmax,ymax};
+  }
+  const c=$('#linChart'), ctx=p3(c);
+  $('#linCalc').onclick=()=>{
+    const x1=parseFloat($('#d1').value), x2=parseFloat($('#d2').value);
+    const y=w[0]+w[1]*x1+w[2]*x2;
+    const {sx,sz}=p3(c);
+    const cx=sx(x1), cy=sz(y);
+    const xx=c.getContext('2d');
+    xx.beginPath(); xx.arc(cx,cy,8,0,7); xx.fillStyle='#3aa675'; xx.fill(); xx.strokeStyle='#fff'; xx.lineWidth=2; xx.stroke();
+    $('#linOut').innerHTML=`输入：距离 x₁ = ${x1}，重量 x₂ = ${x2}\n计算：y = 1.60 + 1.26×${x1} + 0.76×${x2} = ${y.toFixed(3)}\n→ 预测燃油消耗约 ${y.toFixed(2)} ×10³ 升 = ${(y*1000).toFixed(0)} 升  🟢 绿色圆点为预测位置`;
+  };
+  $('#linShow').onclick=()=>{show=!show;p3(c);};
+})();
+
+/* ============ 逻辑回归 ============ */
+(function(){
+  // sigmoid demo
+  const sc=$('#sigChart'), sx=retina(sc), SW=sc.width, SH=sc.height;
+  function drawSig(){
+    const w=+$('#sigW').value, t=+$('#sigT').value/100;
+    $('#sigWv').textContent=w; $('#sigTv').textContent=t.toFixed(2);
+    sx.clearRect(0,0,SW,SH);
+    const pl=44,pr=14,pt=16,pb=34,pw=SW-pl-pr,ph=SH-pt-pb;
+    const z0=-6, z1=6;
+    sx.strokeStyle='#eef1f5'; sx.lineWidth=1;
+    for(let g=0;g<=4;g++){const yy=g/4; sx.beginPath();sx.moveTo(pl,pt+ph*yy);sx.lineTo(SW-pr,pt+ph*yy);sx.stroke();}
+    sx.fillStyle='rgba(46,111,208,.16)'; sx.fillRect(pl+pw*((-w/2+6)/12),pt,SW-pr-pl,ph);
+    sx.beginPath(); sx.strokeStyle='#2e6fd0'; sx.lineWidth=2.6;
+    for(let z=z0;z<=z1;z+=0.08){const p=1/(1+Math.exp(-w*(z/4))), xx=pl+pw*((z-z0)/12), yy=pt+ph*(1-p);
+      z===z0?sx.moveTo(xx,yy):sx.lineTo(xx,yy);}
+    sx.stroke();
+    sx.beginPath(); sx.strokeStyle='#e0a03c'; sx.setLineDash([5,4]); sx.lineWidth=2;
+    sx.moveTo(pl+pw*t,pt); sx.lineTo(pl+pw*t,pt+ph); sx.stroke(); sx.setLineDash([]);
+    sx.fillStyle='#8a97a8'; sx.font='11px sans-serif'; sx.textAlign='center';
+    sx.fillText('线性输出 z',SW/2,SH-8); sx.textAlign='right'; sx.fillText('1.0',pl-6,pt+4); sx.fillText('0.5',pl-6,pt+ph/2+4); sx.fillText('0.0',pl-6,pt+ph+4);
+    sx.fillStyle='#33475c'; sx.font='bold 11.5px sans-serif'; sx.textAlign='left';
+    sx.fillText('Sigmoid: P = σ(w·z)',pl+6,pt+14);
+  }
+  $('#sigW').oninput=drawSig; $('#sigT').oninput=drawSig; drawSig();
+
+  // 2D classification
+  const lc=$('#logChart'), lx=retina(lc), LW=lc.width, LH=lc.height;
+  const w=[-13.88,13.05,-3.62];
+  function sig(z){return 1/(1+Math.exp(-z));}
+  function drawLog(){
+    lx.clearRect(0,0,LW,LH);
+    const pl=40,pr=14,pt=16,pb=30,pw=LW-pl-pr,ph=LH-pt-pb;
+    const xmax=2.6,ymax=3.0;
+    lx.strokeStyle='#eef1f5'; lx.lineWidth=1;
+    for(let g=0;g<=6;g++){lx.beginPath();lx.moveTo(pl,pt+ph*g/6);lx.lineTo(LW-pr,pt+ph*g/6);lx.stroke();}
+    lx.strokeStyle='#dde4ee'; lx.strokeRect(pl,pt,pw,ph);
+    // decision boundary: w0+w1 x + w2 y = 0  =>  y = -(w0+w1 x)/w2
+    lx.beginPath(); lx.strokeStyle='#e0a03c'; lx.setLineDash([6,5]); lx.lineWidth=2;
+    for(let xx=0;xx<=xmax;xx+=0.1){const yy=-(w[0]+w[1]*xx)/w[2];
+      const px=pl+pw*(xx/xmax), py=pt+ph*(1-(yy/ymax));
+      xx===0?lx.moveTo(px,py):lx.lineTo(px,py);}
+    lx.stroke(); lx.setLineDash([]);
+    const data=[[1.5,2.0,0],[2.0,2.5,1],[1.0,1.5,0],[1.8,2.1,1]];
+    data.forEach(p=>{lx.beginPath();lx.arc(pl+pw*(p[0]/xmax),pt+ph*(1-(p[1]/ymax)),6,0,7);
+      lx.fillStyle=p[2]?'#d9534f':'#2e6fd0';lx.fill();lx.strokeStyle='#fff';lx.lineWidth=1.5;lx.stroke();});
+    return {pl,pr,pt,pw,ph,xmax,ymax};
+  }
+  let lg=drawLog();
+  $('#logCalc').onclick=()=>{
+    const x1=parseFloat($('#lg1').value), x2=parseFloat($('#lg2').value);
+    const z=w[0]+w[1]*x1+w[2]*x2, p=sig(z);
+    const cls=p>0.5?'超标 🔴':'未超标 🔵';
+    lg=drawLog();
+    const xx=lc.getContext('2d'), cx=lg.pl+lg.pw*(x1/lg.xmax), cy=lg.pt+lg.ph*(1-(x2/lg.ymax));
+    xx.beginPath(); xx.arc(cx,cy,8,0,7); xx.fillStyle=p>0.5?'#d9534f':'#2e6fd0'; xx.fill(); xx.strokeStyle='#fff'; xx.lineWidth=2; xx.stroke();
+    $('#logOut').innerHTML=`输入：距离 x₁ = ${x1}，重量 x₂ = ${x2}\nz = −13.88 + 13.05×${x1} − 3.62×${x2} = ${z.toFixed(2)}\nP(超标) = σ(${z.toFixed(2)}) ≈ ${p.toFixed(3)}  ${p>0.5?'&gt;':'≤'} 0.5\n→ 判定为 ${cls}`;
+  };
+})();
+
+/* ============ K 均值 ============ */
+(function(){
+  const K=6, c=$('#kChart'), x=retina(c), W=c.width, H=c.height;
+  let k=3, pts=[], centers=[], assign=[], iter=0, lastJ=0;
+  const colors=['#2e6fd0','#e0a03c','#3aa675','#d9534f','#8e6bbf','#19a6b8'];
+  function newData(){
+    pts=[]; const groups=[];
+    for(let i=0;i<k;i++) groups.push([rand(120,W-120),rand(80,H-80)]);
+    const n=+$('#kP').value;
+    for(let i=0;i<n;i++){const g=Math.floor(Math.random()*k);
+      pts.push([groups[g][0]+rand(-70,70), groups[g][1]+rand(-55,55)]);}
+    centers=pts.slice(0,k).map(p=>p.slice());
+    assign=new Array(pts.length).fill(0);
+    iter=0; lastJ=0;
+  }
+  function J(){
+    let s=0; centers.forEach((cj,j)=>pts.forEach((p,i)=>{if(assign[i]===j){const dx=p[0]-cj[0],dy=p[1]-cj[1];s+=dx*dx+dy*dy;}}));
+    return s;
+  }
+  function step(){
+    let swapped=0;
+    pts.forEach((p,i)=>{let best=0,bd=1e9; centers.forEach((cj,j)=>{const d=(p[0]-cj[0])**2+(p[1]-cj[1])**2; if(d<bd){bd=d;best=j;}});
+      if(assign[i]!==best){assign[i]=best;swapped++;}});
+    let maxmove=0, nj=centers.map(()=>[0,0]), cnt=centers.map(()=>0);
+    pts.forEach((p,i)=>{nj[assign[i]][0]+=p[0]; nj[assign[i]][1]+=p[1]; cnt[assign[i]]++;});
+    centers.forEach((cj,j)=>{if(cnt[j]){const nx=nj[j][0]/cnt[j], ny=nj[j][1]/cnt[j]; maxmove=Math.max(maxmove,Math.hypot(nx-cj[0],ny-cj[1])); centers[j]=[nx,ny];}});
+    iter++;
+    const cur=J();
+    $('#kJ').textContent=cur.toFixed(0);
+    $('#kMove').textContent=maxmove.toFixed(2);
+    $('#kSwapped').textContent=swapped;
+    $('#kIter').textContent=iter;
+    return maxmove;
+  }
+  function draw(){
+    x.clearRect(0,0,W,H);
+    x.strokeStyle='#eef1f5'; x.lineWidth=1;
+    for(let g=0;g<=W;g+=50){x.beginPath();x.moveTo(g,0);x.lineTo(g,H);x.stroke();}
+    for(let g=0;g<=H;g+=50){x.beginPath();x.moveTo(0,g);x.lineTo(W,g);x.stroke();}
+    pts.forEach((p,i)=>{x.beginPath();x.arc(p[0],p[1],4.4,0,7);x.fillStyle=colors[assign[i]];x.globalAlpha=.72;x.fill();x.globalAlpha=1;});
+    centers.forEach((cj,j)=>{x.beginPath();x.arc(cj[0],cj[1],11,0,7);x.fillStyle=colors[j];x.fill();x.strokeStyle='#fff';x.lineWidth=3;x.stroke();
+      x.beginPath();x.arc(cj[0],cj[1],19,0,7);x.strokeStyle=colors[j];x.globalAlpha=.35;x.lineWidth=2;x.stroke();x.globalAlpha=1;});
+    $('#kLeg').innerHTML=colors.slice(0,k).map((cc,j)=>`<span><i style="background:${cc}"></i>簇 ${j+1} · ${pts.filter((p,i)=>assign[i]===j).length} 个点</span>`).join(' ');
+  }
+  let timer=null;
+  function go(){
+    if(timer){clearInterval(timer);timer=null;$('#kAuto').textContent='▶ 自动运行';return;}
+    $('#kAuto').textContent='⏸ 暂停';
+    const loop=()=>{const m=step();draw(); if(iter>=80||m<0.05){clearInterval(timer);timer=null;$('#kAuto').textContent='▶ 自动运行';}};
+    loop(); timer=setInterval(loop,700);
+  }
+  function setup(){k=+$('#kN').value; $('#kNv').textContent=k; newData(); draw(); $('#kJ').textContent='—';$('#kMove').textContent='—';$('#kSwapped').textContent='—';$('#kIter').textContent=0;}
+  $('#kN').oninput=setup; $('#kP').oninput=()=>{$('#kPv').textContent=$('#kP').value; if(pts.length) newData(),draw();};
+  $('#kStep').onclick=()=>{if(!pts.length)newData();step();draw();};
+  $('#kAuto').onclick=go;
+  $('#kReset').onclick=()=>{if(timer)go();setup();};
+  setup();
+})();
+
+/* ============ 图像分割 ============ */
+(function(){
+  const c=$('#segCanvas'),x=retina(c),W=c.width,H=c.height;
+  const blobs=[];
+  for(let i=0;i<10;i++)blobs.push({x:rand(40,W-40),y:rand(30,H-30),r:rand(40,90),col:[rand(60,230),rand(60,230),rand(60,230)]});
+  function gen(k){
+    x.clearRect(0,0,W,H);
+    blobs.forEach(b=>{const g=x.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r);
+      g.addColorStop(0,`rgb(${b.col.map(v=>v|0).join(',')})`);g.addColorStop(1,'rgba(255,255,255,0)');
+      x.fillStyle=g;x.beginPath();x.arc(b.x,b.y,250,0,7);x.fill();});
+    // sample k centers via kmeans-ish on colors
+    const samples=[];
+    for(let i=0;i<600;i++){const p=[rand(0,W),rand(0,H)];let col=[0,0,0];
+      blobs.forEach(b=>{const t=Math.max(0,1-Math.hypot(p[0]-b.x,p[1]-b.y)/b.r); col=col.map((v,j)=>v+t*b.col[j]);});
+      const sum=col.reduce((a,b)=>a+b,0); col=col.map(v=>Math.min(255,v/3*4|0)); samples.push(col);}
+    let cc=samples.slice(0,k).map(s=>s.slice());
+    for(let it=0;it<6;it++){const cnt=cc.map(()=>[0,0,0,0]);
+      samples.forEach(s=>{let b=0,bd=1e9;cc.forEach((cj,j)=>{const d=(cj[0]-s[0])**2+(cj[1]-s[1])**2+(cj[2]-s[2])**2;if(d<bd){bd=d;b=j;}});
+        cnt[b][0]+=s[0];cnt[b][1]+=s[1];cnt[b][2]+=s[2];cnt[b][3]++;});
+      cc=cc.map((cj,j)=>cnt[j][3]?[cnt[j][0]/cnt[j][3],cnt[j][1]/cnt[j][3],cnt[j][2]/cnt[j][3]]:cj);}
+    const img=x.getImageData(0,0,W,H);
+    for(let i=0;i<img.data.length;i+=4){let b=0,bd=1e9;
+      cc.forEach((cj,j)=>{const d=(cj[0]-img.data[i])**2+(cj[1]-img.data[i+1])**2+(cj[2]-img.data[i+2])**2;if(d<bd){bd=d;b=j;}});
+      img.data[i]=cc[b][0];img.data[i+1]=cc[b][1];img.data[i+2]=cc[b][2];}
+    x.putImageData(img,0,0);
+  }
+  $('#segK').oninput=()=>{$('#segKv').textContent=$('#segK').value;gen(+$('#segK').value);};
+  gen(4);
+})();
+
+/* ============ 房屋面积误差 ============ */
+(function(){
+  const c1=$('#houseTrain'),c2=$('#houseTest'),x1=retina(c1),x2=retina(c2);
+  const W=c1.width,H=c1.height;
+  const train=[[60,180],[80,240],[100,300],[120,360],[140,420]];
+  const test={x:180,y:520};
+  let drag=false;
+  function axes(g,pl,pr,pt,pb,pw,ph){
+    g.strokeStyle='#eef1f5'; g.lineWidth=1;
+    for(let gx=0;gx<=5;gx++){g.beginPath();g.moveTo(pl+pw*gx/5,pt);g.lineTo(pl+pw*gx/5,pt+ph);g.stroke();}
+    for(let gy=0;gy<=5;gy++){g.beginPath();g.moveTo(pl,pt+ph*gy/5);g.lineTo(pl+pw,pt+ph*gy/5);g.stroke();}
+    g.strokeStyle='#dde4ee'; g.strokeRect(pl,pt,pw,ph);
+  }
+  const pl=44,pr=16,pt=16,pb=32,pw=W-pl-pr,ph=H-pt-pb;
+  const xmax=200,ymax=600;
+  const sx=v=>pl+pw*(v/xmax), sy=v=>pt+ph*(1-v/ymax);
+  function mseT(s){return train.reduce((s2,p)=>s2+(s*p[0]-p[1])**2,0)/train.length;}
+  function draw(){
+    [['#houseTrain',x1],['#houseTest',x2]].forEach(([id,g])=>{
+      g.clearRect(0,0,W,H); axes(g,pl,pr,pt,pb,pw,ph);
+      const slope=3;
+      g.beginPath(); g.strokeStyle='rgba(46,111,208,.5)'; g.lineWidth=2;
+      g.moveTo(sx(0),sy(0)); g.lineTo(sx(xmax),sy(slope*xmax)); g.stroke();
+      train.forEach(p=>{g.beginPath();g.arc(sx(p[0]),sy(p[1]),6,0,7);g.fillStyle='#2e6fd0';g.fill();g.strokeStyle='#fff';g.lineWidth=1.5;g.stroke();});
+      // residuals
+      g.strokeStyle='rgba(46,111,208,.35)'; g.setLineDash([3,3]); g.lineWidth=1;
+      train.forEach(p=>{g.beginPath();g.moveTo(sx(p[0]),sy(p[1]));g.lineTo(sx(p[0]),sy(slope*p[0]));g.stroke();});
+      g.setLineDash([]);
+    });
+    x2.beginPath(); x2.strokeStyle='rgba(46,111,208,.5)'; x2.lineWidth=2;
+    x2.moveTo(sx(0),sy(0)); x2.lineTo(sx(xmax),sy(3*xmax)); x2.stroke();
+    x2.beginPath(); x2.arc(sx(test.x),sy(test.y),8,0,7); x2.fillStyle='#d9534f'; x2.fill(); x2.strokeStyle='#fff'; x2.lineWidth=2; x2.stroke();
+    x2.strokeStyle='rgba(217,83,79,.45)'; x2.setLineDash([3,3]); x2.lineWidth=1;
+    x2.beginPath(); x2.moveTo(sx(test.x),sy(test.y)); x2.lineTo(sx(test.x),sy(3*test.x)); x2.stroke(); x2.setLineDash([]);
+    x2.fillStyle='#8a97a8'; x2.font='11px sans-serif'; x2.textAlign='center';
+    x2.fillText('拖动我',test.x>120?sx(test.x)-22:sx(test.x)+16,sy(test.y)-10);
+    const et=mseT(3), ev=Math.pow(3*test.x-test.y,2);
+    $('#hTrain').textContent=et.toFixed(0);
+    $('#hTest').textContent=ev.toFixed(0);
+    $('#hSlope').textContent='3.00';
+  }
+  function ev(){return Math.pow(3*test.x-test.y,2);}
+  function pick(e){const r=c2.getBoundingClientRect(),mx=(e.clientX-r.left)*c2.width/r.width,my=(e.clientY-r.top)*c2.height/r.height;
+    return Math.abs(mx-sx(test.x))<26||Math.abs(my-sy(test.y))<26;}
+  c2.addEventListener('mousedown',e=>{if(pick(e))drag=true;});
+  window.addEventListener('mouseup',()=>drag=false);
+  window.addEventListener('mousemove',e=>{if(!drag)return;
+    const r=c2.getBoundingClientRect(),mx=(e.clientX-r.left)*c2.width/r.width,my=(e.clientY-r.top)*c2.height/r.height;
+    test.x=Math.max(20,Math.min(xmax, (mx-pl)/pw*xmax));
+    test.y=Math.max(20,Math.min(ymax,(1-(my-pt)/ph)*ymax));
+    draw();});
+  c2.addEventListener('touchstart',e=>{if(pick(e.touches[0])){e.preventDefault();drag=true;}},{passive:false});
+  window.addEventListener('touchend',()=>drag=false);
+  window.addEventListener('touchmove',e=>{if(!drag)return;const t=e.touches[0],r=c2.getBoundingClientRect();
+    const mx=(t.clientX-r.left)*c2.width/r.width, my=(t.clientY-r.top)*c2.height/r.height;
+    test.x=Math.max(20,Math.min(xmax,(mx-pl)/pw*xmax));
+    test.y=Math.max(20,Math.min(ymax,(1-(my-pt)/ph)*ymax));
+    draw();},{passive:false});
+  draw();
+})();
+
+/* ============ 混淆矩阵 / PR 曲线 ============ */
+(function(){
+  const c=$('#prChart'),x=retina(c),W=c.width,H=c.height;
+  const data=[];
+  for(let i=0;i<60;i++)data.push({s:rand(0.1,0.9),t:i<30?1:0});
+  function calc(t){
+    let TP=0,FP=0,FN=0,TN=0;
+    data.forEach(d=>{const p=d.s>t; if(p&&d.t===1)TP++; else if(p&&d.t===0)FP++; else if(!p&&d.t===1)FN++; else TN++;});
+    return {TP,FP,FN,TN};
+  }
+  function draw(){
+    const t=+$('#prT').value/100; $('#prTv').textContent=t.toFixed(2);
+    const {TP,FP,FN,TN}=calc(t);
+    x.clearRect(0,0,W,H);
+    const pl=40,pr=14,pt=16,pb=34,pw=W-pl-pr,ph=H-pt-pb;
+    x.strokeStyle='#eef1f5'; x.lineWidth=1;
+    for(let g=0;g<=10;g++){const yy=g/10;x.beginPath();x.moveTo(pl,pt+ph*yy);x.lineTo(W-pr,pt+ph*yy);x.stroke();}
+    data.forEach(d=>{const px=pl+pw*d.s, py=pt+ph*(1-(d.t?0.75:0.25));
+      x.beginPath();x.arc(px,py,4.4,0,7);
+      const pred=d.s>t;
+      x.fillStyle=(d.t===1&&pred)?'#3aa675':(d.t===0&&!pred)?'#2e6fd0':(d.t===0&&pred)?'#d9534f':'#e0a03c';
+      x.fill();});
+    x.beginPath(); x.strokeStyle='#e0a03c'; x.setLineDash([5,4]); x.lineWidth=2;
+    x.moveTo(pl+pw*t,pt); x.lineTo(pl+pw*t,pt+ph); x.stroke(); x.setLineDash([]);
+    x.fillStyle='#8a97a8'; x.font='11px sans-serif'; x.textAlign='center';
+    x.fillText('预测概率',W/2,pt+ph+24);
+    x.fillStyle='#33475c'; x.font='bold 11.5px sans-serif'; x.textAlign='left';
+    x.fillText('TP 绿 · FP 红 · FN 黄 · TN 蓝',pl+4,pt+12);
+    const P=TP+FP?TP/(TP+FP):0, R=TP+FN?TP/(TP+FN):0, F1=P+R?2*P*R/(P+R):0, Acc=(TP+TN)/60;
+    $('#mP').textContent=(P*100).toFixed(0)+'%';
+    $('#mR').textContent=(R*100).toFixed(0)+'%';
+    $('#mF1').textContent=(F1*100).toFixed(0)+'%';
+    $('#mAcc').textContent=(Acc*100).toFixed(0)+'%';
+  }
+  $('#prT').oninput=draw; draw();
+})();
+
+/* ============ 测验 ============ */
+const QUIZ=[
+ {q:'根据 Mitchell 的适定性学习问题定义，学习成立的三要素是？',o:['数据、模型、算法','任务 T、性能度量 P、经验 E','训练集、测试集、验证集','分类、回归、聚类'],a:1,
+  e:'Mitchell 的定义：对于任务 T 和性能指标 P，若程序通过经验 E 提高了在 T 上以 P 衡量的性能，就说它学会了 T。'},
+ {q:'"回归"一词的起源与下列哪位学者的研究有关？',o:['Arthur Samuel','Francis Galton','Tom Mitchell','Geoffrey Hinton'],a:1,
+  e:'Galton 在研究父母与子女身高关系时发现"回归到均值"现象，Regression 由此得名。'},
+ {q:'线性回归中，最常用的损失函数是？',o:['二值交叉熵','绝对误差','均方误差 MSE','对数损失'],a:2,
+  e:'线性回归目标是让预测值与真实值之间的均方误差最小。'},
+ {q:'逻辑回归最终输出的含义是？',o:['一个离散类别编号','一个在 (0,1) 之间的概率值','线性回归的实数值','聚类编号'],a:1,
+  e:'通过 Sigmoid 函数将线性输出映射为 (0,1) 之间的概率，概率大于 0.5 判为正类。'},
+ {q:'过拟合模型的典型表现是？',o:['训练误差和测试误差都高','训练误差低、测试误差高','训练误差高、测试误差低','两者都低'],a:1,
+  e:'过拟合捕捉到噪声而错过重点，表现为低训练误差、高测试误差。'},
+ {q:'以下关于 VC 维的说法正确的是？',o:['VC 维越大模型越简单','VC 维越大模型复杂度越高','VC 维与过拟合无关','VC 维只适用于线性模型'],a:1,
+  e:'VC 维是统计学习理论中衡量模型复杂度的概念，VC 维越大模型复杂度越高。'},
+ {q:'K 均值算法的"两步走策略"依次对应？',o:['更新中心 → 分配样本','分配样本到最近中心 → 重新计算中心','计算损失 → 结束','初始化 → 直接输出'],a:1,
+  e:'先按最近距离把样本划归最近的中心，再重新计算各类中心，反复迭代。'},
+ {q:'关于监督学习与非监督学习，正确的是？',o:['两者都用无标签数据','监督学习使用有标签数据','两者都只做分类','非监督学习只能做回归'],a:1,
+  e:'监督学习用有标签数据，学习输入到输出的映射；非监督学习用无标签数据，发现潜在结构。'},
+ {q:'在模型评估中，验证集的主要用途是？',o:['测试最终泛化性能','训练模型参数','调节模型与超参数','统计样本数量'],a:2,
+  e:'验证集用于模型评估与超参数调节；测试集才是评估泛化性能的数据集。'},
+ {q:'某分类任务的混淆矩阵中 TP=40、FP=10、FN=5、TN=45，其精确率 P 约为？',o:['0.80','0.89','0.90','0.95'],a:0,
+  e:'精确率 P = TP/(TP+FP) = 40/50 = 0.80。'},
+ {q:'奥卡姆剃刀原则在模型选择中的含义是？',o:['优先选择最复杂的模型','优先选择简单模型，更易于理解且泛化更好','参数越多越好','准确率越高模型越简单'],a:1,
+  e:'"如无必要，勿增实体"——优先选择简单模型，因其更易于理解、泛化能力更好。'},
+];
+(function(){
+  const box=$('#quiz');
+  box.innerHTML=QUIZ.map((q,i)=>`<div class="q" id="q${i}">
+    <h5>${i+1}. ${q.q}</h5>
+    <div class="opts">${q.o.map((o,j)=>`<div class="opt" data-i="${i}" data-j="${j}">${String.fromCharCode(65+j)}. ${o}</div>`).join('')}</div>
+    <div class="exp"><b>答案：${String.fromCharCode(65+q.a)}</b> ${q.e}</div></div>`).join('');
+  box.querySelectorAll('.opt').forEach(el=>el.onclick=()=>{
+    const i=+el.dataset.i, j=+el.dataset.j, q=QUIZ[i], card=$('#q'+i);
+    if(card.classList.contains('done'))return;
+    card.classList.add('done');
+    card.querySelectorAll('.opt').forEach(o=>{o.classList.remove('sel');
+      const jj=+o.dataset.j;
+      if(jj===q.a)o.classList.add('right');
+      if(jj===j&&j!==q.a)o.classList.add('wrong');});
+    if(j===q.a)el.classList.add('sel');
+    updScore();
+  });
+  function updScore(){
+    let done=0,right=0;
+    QUIZ.forEach((q,i)=>{const card=$('#q'+i);if(card.classList.contains('done')){done++;
+      if(card.querySelector('.opt.right.sel'))right++;}});
+    $('#doneN').textContent=done; $('#rightN').textContent=right;
+  }
+})();
+
+/* ============ 滚动高亮目录 ============ */
+const links=$$('#nav a'), secs=[...links].map(a=>document.querySelector(a.getAttribute('href')));
+window.addEventListener('scroll',()=>{let idx=0;
+  secs.forEach((s,i)=>{if(s&&s.getBoundingClientRect().top<=140)idx=i;});
+  links.forEach((a,i)=>a.classList.toggle('active',i===idx));
+},{passive:true});
+</script>
+</body>
+<script>
+var passcode = "20261020@BH";
+var userInput = prompt("请输入访问密码：");
+if(userInput !== passcode){
+    alert("密码错误，无法访问！");
+    document.body.innerHTML = "<h1 style='text-align:center;margin-top:100px;'>密码错误，请联系管理员</h1>";
+}
+</script>
+</html>
