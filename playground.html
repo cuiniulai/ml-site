@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>神经网络游乐场 · 从零实现</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>🧠 神经网络游乐场 <span class="sub">从零手写 · 比 TensorFlow Playground 更透明</span></h1>
+  </header>
+
+  <div class="layout">
+    <!-- 左侧：控制面板 -->
+    <aside class="panel">
+      <section>
+        <h3>数据</h3>
+        <label>数据集
+          <select id="dataset">
+            <option value="circle">同心圆 circle</option>
+            <option value="xor">异或 XOR</option>
+            <option value="gaussian">高斯 gaussian</option>
+            <option value="spiral">螺旋 spiral</option>
+          </select>
+        </label>
+        <label>噪声 <span id="noiseVal">0.05</span>
+          <input id="noise" type="range" min="0" max="0.3" step="0.01" value="0.05" />
+        </label>
+        <label>训练/测试占比 <span id="ratioVal">50%</span>
+          <input id="ratio" type="range" min="10" max="90" step="5" value="50" />
+        </label>
+        <button id="regen" class="ghost">重新生成数据</button>
+      </section>
+
+      <section>
+        <h3>特征（输入维度）</h3>
+        <div class="checks">
+          <label><input type="checkbox" class="feat" value="x1" checked /> X₁</label>
+          <label><input type="checkbox" class="feat" value="y1" checked /> Y₁</label>
+          <label><input type="checkbox" class="feat" value="x2" /> X₁²</label>
+          <label><input type="checkbox" class="feat" value="y2" /> Y₁²</label>
+          <label><input type="checkbox" class="feat" value="xy" /> X₁·Y₁</label>
+          <label><input type="checkbox" class="feat" value="sinx" /> sin X₁</label>
+          <label><input type="checkbox" class="feat" value="siny" /> sin Y₁</label>
+          <label><input type="checkbox" class="feat" value="cosx" /> cos X₁</label>
+          <label><input type="checkbox" class="feat" value="cosy" /> cos Y₁</label>
+        </div>
+      </section>
+
+      <section>
+        <h3>网络结构</h3>
+        <label>隐藏层（逗号分隔，如 4,2）
+          <input id="hidden" type="text" value="4,2" />
+        </label>
+        <label>激活函数
+          <select id="activation">
+            <option value="tanh">tanh</option>
+            <option value="relu">ReLU</option>
+            <option value="sigmoid">sigmoid</option>
+            <option value="linear">linear</option>
+          </select>
+        </label>
+      </section>
+
+      <section>
+        <h3>超参数</h3>
+        <label>学习率 <span id="lrVal">0.03</span>
+          <input id="lr" type="range" min="0.001" max="0.5" step="0.001" value="0.03" />
+        </label>
+        <label>正则化 L2 <span id="l2Val">0</span>
+          <input id="l2" type="range" min="0" max="0.1" step="0.001" value="0" />
+        </label>
+        <label>批量大小
+          <input id="batch" type="number" min="1" max="200" value="10" />
+        </label>
+        <label>速度（每帧步数）<span id="speedVal">5</span>
+          <input id="speed" type="range" min="1" max="30" step="1" value="5" />
+        </label>
+      </section>
+
+      <section class="buttons">
+        <button id="run" class="primary">▶ 开始</button>
+        <button id="step" class="ghost">单步</button>
+        <button id="reset" class="ghost">重置</button>
+      </section>
+    </aside>
+
+    <!-- 右侧：可视化 -->
+    <main class="stage">
+      <div class="cards">
+        <div class="card">
+          <h4>决策边界 + 数据点</h4>
+          <canvas id="boundary" width="320" height="320"></canvas>
+        </div>
+        <div class="card">
+          <h4>损失 / 准确率曲线</h4>
+          <canvas id="curve" width="320" height="320"></canvas>
+        </div>
+        <div class="card wide">
+          <h4>网络结构（连线粗细=权重大小，蓝=正 红=负）</h4>
+          <canvas id="net" width="680" height="240"></canvas>
+        </div>
+      </div>
+      <div class="stats" id="stats">
+        步数 0 · 训练损失 — · 测试损失 — · 训练准确率 — · 测试准确率 —
+      </div>
+    </main>
+  </div>
+
+  <script src="network.js"></script>
+  <script src="datasets.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
