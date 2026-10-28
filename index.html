@@ -3,59 +3,113 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>我的网站合集</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      background: linear-gradient(135deg, #eef2ff 0%, #f8fafc 60%, #ecfeff 100%);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
-      color: #1f2937;
-    }
-    h1 { font-size: 30px; font-weight: 700; margin-bottom: 8px; }
-    .sub { color: #6b7280; font-size: 15px; margin-bottom: 36px; }
-    .cards { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
-    .card {
-      width: 260px;
-      background: #fff;
-      border-radius: 16px;
-      padding: 28px 24px;
-      text-align: center;
-      text-decoration: none;
-      color: inherit;
-      box-shadow: 0 6px 24px rgba(37, 99, 235, 0.12);
-      transition: transform .18s ease, box-shadow .18s ease;
-      border: 1px solid #eef2ff;
-    }
-    .card:hover { transform: translateY(-6px); box-shadow: 0 14px 34px rgba(37, 99, 235, 0.22); }
-    .emoji { font-size: 46px; margin-bottom: 14px; }
-    .card h2 { font-size: 19px; margin-bottom: 8px; }
-    .card p { font-size: 13px; color: #6b7280; line-height: 1.6; }
-    footer { margin-top: 40px; font-size: 12px; color: #9ca3af; }
-  </style>
+  <title>神经网络游乐场 · 从零实现</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h1>我的网站合集</h1>
-  <div class="sub">选择一个网站进入</div>
+  <header class="topbar">
+    <h1>🧠 神经网络游乐场 <span class="sub">从零手写 · 比 TensorFlow Playground 更透明</span></h1>
+  </header>
 
-  <div class="cards">
-    <a class="card" href="playground.html">
-      <div class="emoji">🧠</div>
-      <h2>神经网络游乐场</h2>
-      <p>从零实现的交互式神经网络<br>可视化教学网站（课程作业）</p>
-    </a>
-    <a class="card" href="old.html">
-      <div class="emoji">🌐</div>
-      <h2>旧网站</h2>
-      <p>之前制作的个人网站<br>点击查看</p>
-    </a>
+  <div class="layout">
+    <!-- 左侧：控制面板 -->
+    <aside class="panel">
+      <section>
+        <h3>数据</h3>
+        <label>数据集
+          <select id="dataset">
+            <option value="circle">同心圆 circle</option>
+            <option value="xor">异或 XOR</option>
+            <option value="gaussian">高斯 gaussian</option>
+            <option value="spiral">螺旋 spiral</option>
+          </select>
+        </label>
+        <label>噪声 <span id="noiseVal">0.05</span>
+          <input id="noise" type="range" min="0" max="0.3" step="0.01" value="0.05" />
+        </label>
+        <label>训练/测试占比 <span id="ratioVal">50%</span>
+          <input id="ratio" type="range" min="10" max="90" step="5" value="50" />
+        </label>
+        <button id="regen" class="ghost">重新生成数据</button>
+      </section>
+
+      <section>
+        <h3>特征（输入维度）</h3>
+        <div class="checks">
+          <label><input type="checkbox" class="feat" value="x1" checked /> X₁</label>
+          <label><input type="checkbox" class="feat" value="y1" checked /> Y₁</label>
+          <label><input type="checkbox" class="feat" value="x2" /> X₁²</label>
+          <label><input type="checkbox" class="feat" value="y2" /> Y₁²</label>
+          <label><input type="checkbox" class="feat" value="xy" /> X₁·Y₁</label>
+          <label><input type="checkbox" class="feat" value="sinx" /> sin X₁</label>
+          <label><input type="checkbox" class="feat" value="siny" /> sin Y₁</label>
+          <label><input type="checkbox" class="feat" value="cosx" /> cos X₁</label>
+          <label><input type="checkbox" class="feat" value="cosy" /> cos Y₁</label>
+        </div>
+      </section>
+
+      <section>
+        <h3>网络结构</h3>
+        <label>隐藏层（逗号分隔，如 4,2）
+          <input id="hidden" type="text" value="4,2" />
+        </label>
+        <label>激活函数
+          <select id="activation">
+            <option value="tanh">tanh</option>
+            <option value="relu">ReLU</option>
+            <option value="sigmoid">sigmoid</option>
+            <option value="linear">linear</option>
+          </select>
+        </label>
+      </section>
+
+      <section>
+        <h3>超参数</h3>
+        <label>学习率 <span id="lrVal">0.03</span>
+          <input id="lr" type="range" min="0.001" max="0.5" step="0.001" value="0.03" />
+        </label>
+        <label>正则化 L2 <span id="l2Val">0</span>
+          <input id="l2" type="range" min="0" max="0.1" step="0.001" value="0" />
+        </label>
+        <label>批量大小
+          <input id="batch" type="number" min="1" max="200" value="10" />
+        </label>
+        <label>速度（每帧步数）<span id="speedVal">5</span>
+          <input id="speed" type="range" min="1" max="30" step="1" value="5" />
+        </label>
+      </section>
+
+      <section class="buttons">
+        <button id="run" class="primary">▶ 开始</button>
+        <button id="step" class="ghost">单步</button>
+        <button id="reset" class="ghost">重置</button>
+      </section>
+    </aside>
+
+    <!-- 右侧：可视化 -->
+    <main class="stage">
+      <div class="cards">
+        <div class="card">
+          <h4>决策边界 + 数据点</h4>
+          <canvas id="boundary" width="320" height="320"></canvas>
+        </div>
+        <div class="card">
+          <h4>损失 / 准确率曲线</h4>
+          <canvas id="curve" width="320" height="320"></canvas>
+        </div>
+        <div class="card wide">
+          <h4>网络结构（连线粗细=权重大小，蓝=正 红=负）</h4>
+          <canvas id="net" width="680" height="240"></canvas>
+        </div>
+      </div>
+      <div class="stats" id="stats">
+        步数 0 · 训练损失 — · 测试损失 — · 训练准确率 — · 测试准确率 —
+      </div>
+    </main>
   </div>
 
-  <footer>部署于 GitHub Pages · 纯静态网站</footer>
+  <script src="network.js"></script>
+  <script src="datasets.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
